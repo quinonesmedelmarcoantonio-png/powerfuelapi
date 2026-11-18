@@ -6,6 +6,7 @@ import com.powerfuel.powerfuelapi.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class ProductoService {
         );
     }
 
-    // Listar todos los productos como DAO (limpio)
+    // Listar todos los productos como DAO
     public List<ProductoDAO> listarTodosDAO() {
         List<Producto> productos = productoRepository.findAll();
         List<ProductoDAO> productosDAO = new ArrayList<>();
@@ -37,8 +38,8 @@ public class ProductoService {
         return productosDAO;
     }
 
-    // Filtro de productos caros
-    public List<Producto> obtenerProductosCaros(Double precio) {
+    // Filtro de productos caros (AHORA RECIBE BIGDECIMAL)
+    public List<Producto> obtenerProductosCaros(BigDecimal precio) {
         return productoRepository.findProductosCaros(precio);
     }
 

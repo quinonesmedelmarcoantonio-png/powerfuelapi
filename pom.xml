@@ -60,6 +60,16 @@
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- ======================================================= -->
+		<!-- <! Dependencia para habilitar Spring Security (autenticación y autorización) --> 
+		<!-- ======================================================= -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<!-- ======================================================= -->
+
 	</dependencies>
 
 	<build>

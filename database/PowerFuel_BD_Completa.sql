@@ -172,36 +172,60 @@ CREATE TABLE configuracion (
     valor TEXT NOT NULL DEFAULT 'sin_valor',
     descripcion VARCHAR(200) NOT NULL DEFAULT 'Sin descripción'
 );
-
-CREATE TABLE servicio_social (
-    id_servicio SERIAL PRIMARY KEY,
-    id_cliente INT REFERENCES clientes(id_cliente) NOT NULL,
-    institucion VARCHAR(150) NOT NULL DEFAULT 'Sin institución',
-    horas_realizadas INT DEFAULT 0 NOT NULL,
-    estado VARCHAR(20) NOT NULL DEFAULT 'Pendiente'
+-- ==========================================
+-- 22. Movimientos de inventario (entradas/salidas de stock)
+-- Guarda cada vez que entra o sale producto del almacén
+-- ==========================================
+CREATE TABLE movimientos_inventario (
+    id_movimiento SERIAL PRIMARY KEY,
+    id_producto INT REFERENCES productos(id_producto) NOT NULL,
+    tipo_movimiento VARCHAR(20) NOT NULL DEFAULT 'Entrada',
+    cantidad INT NOT NULL DEFAULT 0,
+    motivo VARCHAR(200) NOT NULL DEFAULT 'Sin motivo',
+    fecha_movimiento TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-CREATE TABLE laboratorios (
-    id_laboratorio SERIAL PRIMARY KEY,
+-- ==========================================
+-- 23. Envíos de pedidos (rastreo de paquetería)
+-- Guarda la dirección y estado del envío de cada venta
+-- ==========================================
+CREATE TABLE envios (
+    id_envio SERIAL PRIMARY KEY,
+    id_venta INT REFERENCES ventas(id_venta) NOT NULL,
+    direccion_envio TEXT NOT NULL DEFAULT 'Sin dirección',
+    ciudad VARCHAR(100) NOT NULL DEFAULT 'Sin ciudad',
+    estado VARCHAR(100) NOT NULL DEFAULT 'Sin estado',
+    codigo_postal VARCHAR(10) NOT NULL DEFAULT '00000',
+    paqueteria VARCHAR(50) NOT NULL DEFAULT 'Sin paquetería',
+    numero_guia VARCHAR(50) NOT NULL DEFAULT 'SIN-GUIA',
+    estado_envio VARCHAR(20) NOT NULL DEFAULT 'Preparando',
+    fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+-- ==========================================
+-- 24. Promociones (descuentos y ofertas)
+-- Guarda promociones activas sobre productos
+-- ==========================================
+CREATE TABLE promociones (
+    id_promocion SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL DEFAULT 'Sin nombre',
-    ubicacion VARCHAR(150) NOT NULL DEFAULT 'Sin ubicación',
-    capacidad INT NOT NULL DEFAULT 0
+    descripcion TEXT NOT NULL DEFAULT 'Sin descripción',
+    porcentaje_descuento DECIMAL(5,2) NOT NULL DEFAULT 0,
+    fecha_inicio DATE DEFAULT CURRENT_DATE NOT NULL,
+    fecha_fin DATE DEFAULT CURRENT_DATE NOT NULL,
+    activa BOOLEAN DEFAULT TRUE NOT NULL,
+    id_producto INT REFERENCES productos(id_producto) NOT NULL
 );
 
-CREATE TABLE reservaciones (
-    id_reserva SERIAL PRIMARY KEY,
+-- ==========================================
+-- 25. Reseñas (opiniones y calificaciones)
+-- Guarda las reseñas que los clientes dejan a los productos
+-- ==========================================
+CREATE TABLE resenas (
+    id_resena SERIAL PRIMARY KEY,
+    id_producto INT REFERENCES productos(id_producto) NOT NULL,
     id_cliente INT REFERENCES clientes(id_cliente) NOT NULL,
-    id_laboratorio INT REFERENCES laboratorios(id_laboratorio) NOT NULL,
-    fecha DATE NOT NULL,
-    hora_inicio TIME NOT NULL,
-    hora_fin TIME NOT NULL,
-    estado VARCHAR(20) NOT NULL DEFAULT 'Pendiente'
-);
-
-CREATE TABLE documentos (
-    id_documento SERIAL PRIMARY KEY,
-    id_cliente INT REFERENCES clientes(id_cliente) NOT NULL,
-    tipo_documento VARCHAR(50) NOT NULL DEFAULT 'Sin tipo',
-    url_archivo TEXT NOT NULL DEFAULT 'sin-url',
-    fecha_subida TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    calificacion INT NOT NULL DEFAULT 5,
+    comentario TEXT NOT NULL DEFAULT 'Sin comentario',
+    fecha_resena TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
